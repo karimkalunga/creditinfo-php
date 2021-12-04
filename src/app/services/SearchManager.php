@@ -16,12 +16,4 @@ abstract class SearchManager
     {
         throw new Exception("METHOD_NOT_IMPLEMENTED");
     }
-
-    /**
-     * @throws Exception
-     */
-    public function getReportByApplicant(string $applicantId): array
-    {
-        throw new Exception("METHOD_NOT_IMPLEMENTED");
-    }
 }
