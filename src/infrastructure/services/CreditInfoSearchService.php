@@ -90,6 +90,7 @@ class CreditInfoSearchService extends SearchManager
         $body = $this->buildRequestBody($requestData);
         $request = new Request('POST', $_ENV['URI'], $headers, $body);
         $response = $client->sendRequest($request)->getBody();
+        echo $response;
         return $this->parseXMLResponseAndGetRecords($response);
     }
 
