@@ -175,9 +175,8 @@ return '<Company>
         '. $this->getTinXML($company->getTIN(), 'company') .'
         '. $this->getRegistrationNumberXML($company->getRegistrationNumber()) .'
     </IdNumbers>
-    <InquiryReasons>'. $_ENV['APPLICATION_FOR_CREDIT_OR_AMENDMENT_OF_CREDIT_TERMS'] .'
-    </InquiryReasons>
-    <TypeOfReport>'. $_ENV['CREDIT_INFO_REPORT_PLUS'] .'</TypeOfReport>
+    <InquiryReasons>ApplicationForCreditOrAmendmentOfCreditTerms</InquiryReasons>
+    <TypeOfReport>CreditinfoReportPlus</TypeOfReport>
 </Company>';
 }
 
@@ -195,9 +194,8 @@ return '<Individual>
     </IdNumbers>
     '. $this->getPhoneNumberXML($individual->getPhoneNumber()) .'
     '. $this->getLastNameXML($individual->getLastName()) .'
-    <InquiryReasons>'.$_ENV['APPLICATION_FOR_CREDIT_OR_AMENDMENT_OF_CREDIT_TERMS'].'
-    </InquiryReasons>
-    <TypeOfReport>'.$_ENV['CREDIT_INFO_REPORT_PLUS'].'</TypeOfReport>
+    <InquiryReasons>ApplicationForCreditOrAmendmentOfCreditTerms</InquiryReasons>
+    <TypeOfReport>CreditinfoReportPlus</TypeOfReport>
 </Individual>
 ';
 }
