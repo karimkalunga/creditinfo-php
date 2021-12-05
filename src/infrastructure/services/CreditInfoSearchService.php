@@ -23,12 +23,13 @@ class CreditInfoSearchService extends SearchManager
      */
     public function getReport(array $searchInput, string $inputTag): array
     {
-       if ($inputTag == $this->config->item('TAG_COMPANY')) {
+       if ($inputTag == 'company') {
             return $this->getCompanyReport($searchInput);
         }
-        if ($inputTag == $this->config->item('TAG_INDIVIDUAL')) {
+        if ($inputTag == 'individual') {
             return $this->getIndividualReport($searchInput);
         }
+        throw new Exception('INVALID_INPUT_TAG');
     }
 
     /**
@@ -84,10 +85,10 @@ class CreditInfoSearchService extends SearchManager
             ? $this->buildCompanyRequestData($data)
             : $this->buildIndividualRequestData($data);
 
-        $client = new Client(['base_uri' => $this->config->item('CREDIT_INFO_BASE_URI')]);
-        $headers = [ 'Content-Type' => 'text/xml', 'SOAPAction' => $this->config->item('CREDIT_INFO_ACTION') ];
+        $client = new Client(['base_uri' => env('BASE_URI')]);
+        $headers = [ 'Content-Type' => 'text/xml', 'SOAPAction' => env('ACTION') ];
         $body = $this->buildRequestBody($requestData);
-        $request = new Request('POST', $this->config->item('CREDIT_INFO_URI'), $headers, $body);
+        $request = new Request('POST', env('URI'), $headers, $body);
         $response = $client->sendRequest($request)->getBody();
         return $this->parseXMLResponseAndGetRecords($response);
     }
@@ -133,8 +134,8 @@ class CreditInfoSearchService extends SearchManager
             xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
             <wsse:UsernameToken wsu:Id="SecurityToken-ad2b9f33-eba3-4e0f-ae41-e90379b97f56"
                 xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
-                <wsse:Username>'. $this->config->item('CREDIT_INFO_USERNAME') .'</wsse:Username>
-                <wsse:Password>'. $this->config->item('CREDIT_INFO_PASSWORD') .'</wsse:Password>
+                <wsse:Username>'. env('USERNAME') .'</wsse:Username>
+                <wsse:Password>'. env('PASSWORD') .'</wsse:Password>
             </wsse:UsernameToken>
         </wsse:Security>
     </s:Header>
@@ -150,7 +151,7 @@ class CreditInfoSearchService extends SearchManager
                                     xmlns="http://creditinfo.com/schemas/2012/09/MultiConnector/Connectors/Bee/Request"
                                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                                     xsi:schemaLocation="http://creditinfo.com/schemas/2012/09/MultiConnector/Connectors/Bee/Request">
-                                    <DecisionWorkflow>'. $this->config->item('CREDIT_INFO_DECISION_WORKFLOW') .'
+                                    <DecisionWorkflow>'. env('DECISION_WORKFLOW') .'
                                     </DecisionWorkflow>
                                     <RequestData>'. $requestData .'</RequestData>
                                 </request>
@@ -171,12 +172,12 @@ private function buildCompanyRequestData(SearchInputCompany $company): string
 return '<Company>
     '. $this->getCompanyNameXML($company->getCompanyName()) .'
     <IdNumbers>
-        '. $this->getTinXML($company->getTIN(), $this->config->item('TAG_COMPANY')) .'
+        '. $this->getTinXML($company->getTIN(), 'company') .'
         '. $this->getRegistrationNumberXML($company->getRegistrationNumber()) .'
     </IdNumbers>
-    <InquiryReasons>'. $this->config->item('APPLICATION_FOR_CREDIT_OR_AMENDMENT_OF_CREDIT_TERMS') .'
+    <InquiryReasons>'. env('APPLICATION_FOR_CREDIT_OR_AMENDMENT_OF_CREDIT_TERMS') .'
     </InquiryReasons>
-    <TypeOfReport>'. $this->config->item('CREDIT_INFO_REPORT_PLUS') .'</TypeOfReport>
+    <TypeOfReport>'. env('CREDIT_INFO_REPORT_PLUS') .'</TypeOfReport>
 </Company>';
 }
 
@@ -188,15 +189,15 @@ return '<Individual>
     '. $this->getFirstNameXML($individual->getFirstName()) .'
     '. $this->getFullNameXML($individual->getFullName()) .'
     <IdNumbers>
-        '. $this->getTinXML($individual->getTIN(), $this->config->item('CREDIT_INFO_TAG_INDIVIDUAL')) .'
+        '. $this->getTinXML($individual->getTIN(), 'individual') .'
         '. $this->getVotersIdXML($individual->getVotersId()) .'
         '. $this->getNinXML($individual->getNIN()) .'
     </IdNumbers>
     '. $this->getPhoneNumberXML($individual->getPhoneNumber()) .'
     '. $this->getLastNameXML($individual->getLastName()) .'
-    <InquiryReasons>'.$this->config->item('APPLICATION_FOR_CREDIT_OR_AMENDMENT_OF_CREDIT_TERMS').'
+    <InquiryReasons>'.env('APPLICATION_FOR_CREDIT_OR_AMENDMENT_OF_CREDIT_TERMS').'
     </InquiryReasons>
-    <TypeOfReport>'.$this->config->item('CREDIT_INFO_REPORT_PLUS').'</TypeOfReport>
+    <TypeOfReport>'.env('CREDIT_INFO_REPORT_PLUS').'</TypeOfReport>
 </Individual>
 ';
 }
@@ -204,7 +205,7 @@ return '<Individual>
 private function getTinXML(string $tin, string $tag): string
 {
 if (!empty($tin)) {
-return ($tag == $this->config->item('TAG_COMPANY')) ?
+return ($tag == 'company') ?
 "
 <IdNumberPairCompany>
     <IdNumber>$tin</IdNumber>
