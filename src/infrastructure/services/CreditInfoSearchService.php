@@ -151,7 +151,7 @@ class CreditInfoSearchService extends SearchManager
                                 <request
                                     xmlns="http://creditinfo.com/schemas/2012/09/MultiConnector/Connectors/Bee/Request"
                                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                                    xsi:schemaLocation="http://creditinfo.com/schemas/2012/09/MultiConnector/Connectors/Bee/Request">
+                                    xsi:schemaLocation="http://creditinfo.com/schemas/2012/09/MultiConnector/Connectors/Bee/Request file:/C:/Users/d.felix/Desktop/Smart%20Search/Smart%20Search/TZA_NMB_BeeRequest.xsd">
                                     <DecisionWorkflow>'. $_ENV['DECISION_WORKFLOW'] .'
                                     </DecisionWorkflow>
                                     <RequestData>'. $requestData .'</RequestData>
