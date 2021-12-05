@@ -85,10 +85,10 @@ class CreditInfoSearchService extends SearchManager
             ? $this->buildCompanyRequestData($data)
             : $this->buildIndividualRequestData($data);
 
-        $client = new Client(['base_uri' => env('BASE_URI')]);
-        $headers = [ 'Content-Type' => 'text/xml', 'SOAPAction' => env('ACTION') ];
+        $client = new Client(['base_uri' => $_ENV['BASE_URI']]);
+        $headers = [ 'Content-Type' => 'text/xml', 'SOAPAction' => $_ENV['ACTION'] ];
         $body = $this->buildRequestBody($requestData);
-        $request = new Request('POST', env('URI'), $headers, $body);
+        $request = new Request('POST', $_ENV['URI'], $headers, $body);
         $response = $client->sendRequest($request)->getBody();
         return $this->parseXMLResponseAndGetRecords($response);
     }
@@ -134,8 +134,8 @@ class CreditInfoSearchService extends SearchManager
             xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
             <wsse:UsernameToken wsu:Id="SecurityToken-ad2b9f33-eba3-4e0f-ae41-e90379b97f56"
                 xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
-                <wsse:Username>'. env('USERNAME') .'</wsse:Username>
-                <wsse:Password>'. env('PASSWORD') .'</wsse:Password>
+                <wsse:Username>'. $_ENV['USERNAME'] .'</wsse:Username>
+                <wsse:Password>'. $_ENV['PASSWORD'] .'</wsse:Password>
             </wsse:UsernameToken>
         </wsse:Security>
     </s:Header>
@@ -151,7 +151,7 @@ class CreditInfoSearchService extends SearchManager
                                     xmlns="http://creditinfo.com/schemas/2012/09/MultiConnector/Connectors/Bee/Request"
                                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                                     xsi:schemaLocation="http://creditinfo.com/schemas/2012/09/MultiConnector/Connectors/Bee/Request">
-                                    <DecisionWorkflow>'. env('DECISION_WORKFLOW') .'
+                                    <DecisionWorkflow>'. $_ENV['DECISION_WORKFLOW'] .'
                                     </DecisionWorkflow>
                                     <RequestData>'. $requestData .'</RequestData>
                                 </request>
@@ -175,9 +175,9 @@ return '<Company>
         '. $this->getTinXML($company->getTIN(), 'company') .'
         '. $this->getRegistrationNumberXML($company->getRegistrationNumber()) .'
     </IdNumbers>
-    <InquiryReasons>'. env('APPLICATION_FOR_CREDIT_OR_AMENDMENT_OF_CREDIT_TERMS') .'
+    <InquiryReasons>'. $_ENV['APPLICATION_FOR_CREDIT_OR_AMENDMENT_OF_CREDIT_TERMS'] .'
     </InquiryReasons>
-    <TypeOfReport>'. env('CREDIT_INFO_REPORT_PLUS') .'</TypeOfReport>
+    <TypeOfReport>'. $_ENV['CREDIT_INFO_REPORT_PLUS'] .'</TypeOfReport>
 </Company>';
 }
 
@@ -195,9 +195,9 @@ return '<Individual>
     </IdNumbers>
     '. $this->getPhoneNumberXML($individual->getPhoneNumber()) .'
     '. $this->getLastNameXML($individual->getLastName()) .'
-    <InquiryReasons>'.env('APPLICATION_FOR_CREDIT_OR_AMENDMENT_OF_CREDIT_TERMS').'
+    <InquiryReasons>'.$_ENV['APPLICATION_FOR_CREDIT_OR_AMENDMENT_OF_CREDIT_TERMS'].'
     </InquiryReasons>
-    <TypeOfReport>'.env('CREDIT_INFO_REPORT_PLUS').'</TypeOfReport>
+    <TypeOfReport>'.$_ENV['CREDIT_INFO_REPORT_PLUS'].'</TypeOfReport>
 </Individual>
 ';
 }
